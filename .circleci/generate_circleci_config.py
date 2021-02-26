@@ -20,6 +20,7 @@ from jinja2 import Environment, FileSystemLoader
 # ])
 
 IMAGE_MAP = collections.OrderedDict([
+    ("2.0.0-3.dev", ["buster"]),
     ("2.0.1-1.dev", ["buster"]),
 ])
 

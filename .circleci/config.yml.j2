@@ -1075,7 +1075,8 @@ commands:
 
                 if [[ "${tag}" == *"onbuild-"* ]]; then
                   [ ! -d /tmp/build ] && mkdir /tmp/build
-                  echo ${tag} > /tmp/build/current_tag
+                  airflow_release=$(echo $tag | cut -d "-" -f 1)
+                  echo ${tag} > /tmp/build/current_tag_$airflow_release.release
                 fi
 
               else
@@ -1189,6 +1190,10 @@ commands:
         workflow-name:
             default: '*'
             description: The type of workflows to wait for. This can be a regex
+            type: string
+        airflow-version:
+            default: '2.0.0'
+            description: Airflow version to be followed
             type: string
     steps:
         - run:
