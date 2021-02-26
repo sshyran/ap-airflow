@@ -4,12 +4,14 @@ workflows:
 
   regression:
     jobs:
-      - waiter
+     
 {%- for ac_version, distributions in image_map.items() %}
 {%- set airflow_version = ac_version | get_airflow_version -%}
 {%- set dev_build = "true" if "dev" in ac_version else "false" -%}
 {%- for distribution in distributions %}
     {%- if airflow_version|checkair2 == true %}
+      - waiter:
+          name: waiter-{{ airflow_version }}-{{ distribution }}
       - qa-ui:
           name: qa-ui-regression-celery-{{ airflow_version }}-{{ distribution }}
           airflow_version: {{ airflow_version }}
@@ -18,7 +20,7 @@ workflows:
           executor_type: "celery"
           test_type: "testim"
           requires:
-            - waiter
+            - waiter-{{ airflow_version }}-{{ distribution }}
       - qa-ui:
           name: qa-ui-regression-k8s-{{ airflow_version }}-{{ distribution }}
           airflow_version: {{ airflow_version }}
@@ -45,7 +47,7 @@ workflows:
           executor_type: "celery"
           test_type: "core"
           requires:
-            - waiter
+            - waiter-{{ airflow_version }}-{{ distribution }}
       # - qa-negative:
       #     name: qa-negative-celery-{{ airflow_version }}-{{ distribution }}
       #     airflow_version: {{ airflow_version }}
@@ -81,7 +83,7 @@ workflows:
           executor_type: "celery"
           test_type: "rest"
           requires:
-            - waiter
+            - waiter-{{ airflow_version }}-{{ distribution }}
       - qa-restapi:
           name: qa-restapi-local-{{ airflow_version }}-{{ distribution }}
           airflow_version: {{ airflow_version }}
@@ -108,7 +110,7 @@ workflows:
           executor_type: "kubernetes"
           test_type: "core"
           requires:
-            - waiter
+            - waiter-{{ airflow_version }}-{{ distribution }}
       - qa-k8s:
           name: qa-k8s-k8s-{{ airflow_version }}-{{ distribution }}
           airflow_version: {{ airflow_version }}
@@ -144,7 +146,7 @@ workflows:
           executor_type: "local"
           test_type: "core"
           requires:
-            - waiter
+            - waiter-{{ airflow_version }}-{{ distribution }}
     {%- endif %}
 {%- endfor %}
 {%- endfor %}
@@ -1134,7 +1136,7 @@ commands:
             fi
             set +x
       - store_artifacts:
-          path: /tmp/build/current_tag
+          path: /tmp/build
   clair-scan:
     description: "Vulnerability scan a Docker image"
     parameters:
