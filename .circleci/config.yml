@@ -337,6 +337,7 @@ workflows:
               only:
                 - master
                 - testim_workflows
+                - waiter_for_each_airflowv
       - build:
           name: build-2.0.1-buster
           airflow_version: 2.0.1
@@ -394,6 +395,7 @@ workflows:
               only:
                 - master
                 - testim_workflows
+                - waiter_for_each_airflowv
   nightly:
     triggers:
       - schedule:

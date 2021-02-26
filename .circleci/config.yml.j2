@@ -215,6 +215,7 @@ workflows:
               only:
                 - master
                 - testim_workflows
+                - waiter_for_each_airflowv
 {%- endfor %}
 {%- endfor %}
 {%- if image_map.keys() | dev_releases | length > 0 %}
